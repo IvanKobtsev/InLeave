@@ -1,0 +1,23 @@
+.CommonCalendar {
+  padding-bottom: 60px;
+
+  .dayBody {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 60px);
+    box-sizing: border-box;
+  }
+
+  .absentBlock {
+    position: absolute;
+    height: 50px;
+    border-radius: 20px;
+    width: calc(var(--percentage) - 30px);
+    cursor: pointer;
+    z-index: 2;
+  }
+}
+
+.scrolled {
+  box-shadow: 0 0 15px 0 #000;
+}

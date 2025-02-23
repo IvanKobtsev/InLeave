@@ -11,4 +11,20 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  --default-grey: #9d9d9d;
+  --default-blue: #0060e6;
+  --accepted-color: #71EB91;
+  --rejected-color: #E59A9A;
+  --pending-color: #EBEB71;
+}
+
+#root {
+  height: 100vh;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
 }
