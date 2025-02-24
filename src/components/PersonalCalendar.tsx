@@ -13,14 +13,14 @@ export default function PersonalCalendar({ absents }: PersonalCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const mouseProps = useRef<MouseData>({
-    x: 0,
-    y: 0,
+    position: { x: 0, y: 0 },
+    velocity: { x: 0, y: 0 },
     isDragging: false,
   });
 
   const startDrag = (event: MouseEvent<HTMLDivElement>) => {
     mouseProps.current.isDragging = true;
-    mouseProps.current.x = event.pageX - scrollRef.current!.offsetLeft;
+    mouseProps.current.position.x = event.pageX - scrollRef.current!.offsetLeft;
   };
 
   const onDrag = (event: MouseEvent<HTMLDivElement>) => {
@@ -28,8 +28,11 @@ export default function PersonalCalendar({ absents }: PersonalCalendarProps) {
     if (!mouseProps.current.isDragging) return;
 
     scrollRef.current!.scrollLeft +=
-      (mouseProps.current.x - event.pageX - scrollRef.current!.offsetLeft) * 10;
-    mouseProps.current.x = event.pageX - scrollRef.current!.offsetLeft;
+      (mouseProps.current.position.x -
+        event.pageX -
+        scrollRef.current!.offsetLeft) *
+      10;
+    mouseProps.current.position.x = event.pageX - scrollRef.current!.offsetLeft;
   };
 
   const stopDrag = (_: MouseEvent<HTMLDivElement>) => {
@@ -50,7 +53,7 @@ export default function PersonalCalendar({ absents }: PersonalCalendarProps) {
     <>
       <div
         ref={scrollRef}
-        className={styles.PersonalCalendar}
+        className={`${styles.PersonalCalendar} ${styles.MyCalendar}`}
         onMouseDown={startDrag}
         onMouseMove={onDrag}
         onMouseUp={stopDrag}
@@ -84,10 +87,23 @@ export default function PersonalCalendar({ absents }: PersonalCalendarProps) {
               }
             }
 
+            const weekDay = new Date(
+              currentDate.getFullYear(),
+              currentDate.getMonth(),
+              index + 1,
+            ).getDay();
+
             return (
-              <div key={index} className={styles.day}>
+              <div
+                key={index}
+                className={`${styles.day} ${styles.personalDay}`}
+              >
                 <DayHeader index={index} currentDate={currentDate} />
-                <div className={styles.dayBody}>{absentBlock}</div>
+                <div
+                  className={`${styles.dayBody} ${weekDay === 0 ? styles.weekend : ""}`}
+                >
+                  {absentBlock}
+                </div>
               </div>
             );
           },

@@ -19,6 +19,7 @@ export interface AbsentData {
 export interface StudentAbsents {
   id: string;
   name: string;
+  faculty: string;
   group: string;
   absents: AbsentData[];
 }
