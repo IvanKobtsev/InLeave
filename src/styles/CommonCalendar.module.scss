@@ -145,3 +145,47 @@
   justify-content: center;
   align-items: center;
 }
+
+.exportAbsents {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 32px;
+  background: #fff;
+  padding: 17px 28px;
+  border: none;
+  color: var(--default-grey);
+  font-size: 32px;
+  font-family: "Manrope", sans-serif;
+  border-radius: 25px;
+  cursor: pointer;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+
+  &::before {
+    content: "";
+    display: block;
+    width: 46px;
+    height: 46px;
+    background: url("../assets/svg/export.svg") center center no-repeat;
+    margin-right: 18px;
+  }
+}
+
+.absentBlock {
+  &.absentAbruptEnd {
+    border-radius: 20px 0 0 20px;
+    width: calc(var(--percentage) - 15px);
+  }
+
+  &.absentAbruptStart {
+    border-radius: 0 20px 20px 0;
+    width: calc(var(--percentage) - 15px);
+    translate: -15px 0;
+  }
+
+  &.absentAbrupt {
+    border-radius: 0;
+    width: calc(var(--percentage));
+    translate: -15px 0;
+  }
+}

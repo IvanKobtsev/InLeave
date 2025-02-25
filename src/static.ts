@@ -2,6 +2,10 @@ export const getLastDayOfMonth = (date: Date): Date => {
   return new Date(date.getFullYear(), date.getMonth() + 1, 0);
 };
 
+export const getFirstDayOfMonth = (date: Date): Date => {
+  return new Date(date.getFullYear(), date.getMonth());
+};
+
 export const addLeadingZero = (num: number) => {
   return num < 10 ? "0" + num : num;
 };

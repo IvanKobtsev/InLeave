@@ -9,10 +9,12 @@ import {
   useState,
   WheelEvent,
 } from "react";
-import { getDateDifferenceInDays, getLastDayOfMonth } from "../static.ts";
+import { getFirstDayOfMonth, getLastDayOfMonth } from "../static.ts";
 import { MouseData, StudentAbsents, Vector } from "../types.ts";
 import DayHeader from "./DayHeader.tsx";
 import FilterChanger from "./FilterChanger.tsx";
+import ExportButton from "./ExportButton.tsx";
+import AbsentBlock from "./AbsentBlock.tsx";
 
 interface CommonCalendarProps {
   absents: StudentAbsents[];
@@ -48,6 +50,8 @@ export default function CommonCalendar({ absents }: CommonCalendarProps) {
     "932403",
     "932404",
   ]);
+
+  const exportAbsents = () => {};
 
   const startDrag = (event: MouseEvent<HTMLDivElement>) => {
     mouseProps.current.isDragging = true;
@@ -103,12 +107,6 @@ export default function CommonCalendar({ absents }: CommonCalendarProps) {
 
     applyMomentum(mouseProps.current.velocity);
   };
-
-  const absentStatuses = [
-    personalCalendarStyles.absentPending,
-    personalCalendarStyles.absentAccepted,
-    personalCalendarStyles.absentRejected,
-  ];
 
   const applyMomentum = (currentVelocity: Vector) => {
     if (Math.abs(currentVelocity.x) < 0.1 && Math.abs(currentVelocity.y) < 0.1)
@@ -235,8 +233,7 @@ export default function CommonCalendar({ absents }: CommonCalendarProps) {
           {Array.from({ length: getLastDayOfMonth(currentDate).getDate() }).map(
             (_, index) => {
               const currentDay = index + 1,
-                currentMonth = currentDate.getMonth(),
-                currentYear = currentDate.getFullYear();
+                currentMonth = currentDate.getMonth();
 
               let absentBlocks = null,
                 absentBlock = null;
@@ -244,22 +241,34 @@ export default function CommonCalendar({ absents }: CommonCalendarProps) {
               for (const studentAbsents of filteredAbsents) {
                 absentBlock = null;
 
-                for (const absent of studentAbsents.absents) {
-                  if (
-                    absent.from.getDate() === currentDay &&
-                    absent.from.getMonth() === currentMonth &&
-                    absent.from.getFullYear() === currentYear
-                  ) {
-                    const stylesheet = `#absentBlock_${studentAbsents.id}_${absent.id} { --percentage: ${(getDateDifferenceInDays(absent.from, absent.to) + 1) * 100}% }`;
-                    absentBlock = (
-                      <>
-                        <style>{stylesheet}</style>
-                        <div
-                          id={`absentBlock_${studentAbsents.id}_${absent.id}`}
-                          className={`${styles.absentBlock} ${absentStatuses[absent.status]}`}
-                        ></div>
-                      </>
-                    );
+                if (
+                  index === 0 &&
+                  studentAbsents.absents[0].from <
+                    getFirstDayOfMonth(currentDate)
+                ) {
+                  absentBlock = (
+                    <AbsentBlock
+                      absent={studentAbsents.absents[0]}
+                      currentDate={currentDate}
+                      personal={false}
+                    />
+                  );
+                } else {
+                  for (const absent of studentAbsents.absents) {
+                    if (
+                      absent.from.getDate() === currentDay &&
+                      absent.from.getMonth() === currentMonth
+                    ) {
+                      absentBlock = (
+                        <AbsentBlock
+                          absent={absent}
+                          currentDate={currentDate}
+                          personal={false}
+                          studentId={studentAbsents.id}
+                        />
+                      );
+                      break;
+                    }
                   }
                 }
 
@@ -293,19 +302,22 @@ export default function CommonCalendar({ absents }: CommonCalendarProps) {
             },
           )}
         </div>
-        <FilterChanger
-          groupChoices={groupChoices}
-          facultyChoice={facultyChoice}
-          setFacultyChoice={(
-            facultyChoice: string | ((prevState: string) => string),
-          ) => {
-            setFacultyChoice(facultyChoice);
-            setGroupChoice("Не выбрано");
-          }}
-          groupChoice={groupChoice}
-          setGroupChoice={setGroupChoice}
-        />
-        <MonthChanger date={currentDate} dateSetter={dateSetter} />
+        <div className={personalCalendarStyles.actionButtonsWrapper}>
+          <ExportButton exportAbsents={exportAbsents} />
+          <FilterChanger
+            groupChoices={groupChoices}
+            facultyChoice={facultyChoice}
+            setFacultyChoice={(
+              facultyChoice: string | ((prevState: string) => string),
+            ) => {
+              setFacultyChoice(facultyChoice);
+              setGroupChoice("Не выбрано");
+            }}
+            groupChoice={groupChoice}
+            setGroupChoice={setGroupChoice}
+          />
+          <MonthChanger date={currentDate} dateSetter={dateSetter} />
+        </div>
       </div>
     </div>
   );

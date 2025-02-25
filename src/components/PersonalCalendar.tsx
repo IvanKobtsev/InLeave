@@ -1,9 +1,11 @@
 import styles from "../styles/PersonalCalendar.module.scss";
-import { getDateDifferenceInDays, getLastDayOfMonth } from "../static.ts";
+import { getFirstDayOfMonth, getLastDayOfMonth } from "../static.ts";
 import { useRef, useState, MouseEvent, WheelEvent } from "react";
 import { AbsentData, MouseData } from "../types.ts";
 import MonthChanger from "./MonthChanger.tsx";
 import DayHeader from "./DayHeader.tsx";
+import personalCalendarStyles from "../styles/PersonalCalendar.module.scss";
+import AbsentBlock from "./AbsentBlock.tsx";
 
 interface PersonalCalendarProps {
   absents: AbsentData[];
@@ -43,12 +45,6 @@ export default function PersonalCalendar({ absents }: PersonalCalendarProps) {
     scrollRef.current!.scrollLeft += event.deltaY * 4;
   };
 
-  const absentStatuses = [
-    styles.absentPending,
-    styles.absentAccepted,
-    styles.absentRejected,
-  ];
-
   return (
     <>
       <div
@@ -63,30 +59,38 @@ export default function PersonalCalendar({ absents }: PersonalCalendarProps) {
         {Array.from({ length: getLastDayOfMonth(currentDate).getDate() }).map(
           (_, index) => {
             const currentDay = index + 1,
-              currentMonth = currentDate.getMonth(),
-              currentYear = currentDate.getFullYear();
+              currentMonth = currentDate.getMonth();
 
             let absentBlock = null;
 
-            for (const absent of absents) {
-              if (
-                absent.from.getDate() === currentDay &&
-                absent.from.getMonth() === currentMonth &&
-                absent.from.getFullYear() === currentYear
-              ) {
-                const stylesheet = `#absentBlock_${absent.id} { --percentage: ${(getDateDifferenceInDays(absent.from, absent.to) + 1) * 100}% }`;
-                absentBlock = (
-                  <>
-                    <style>{stylesheet}</style>
-                    <div
-                      id={`absentBlock_${absent.id}`}
-                      className={`${styles.absentBlock} ${absentStatuses[absent.status]}`}
-                    ></div>
-                  </>
-                );
+            if (
+              index === 0 &&
+              absents[0].from < getFirstDayOfMonth(currentDate)
+            ) {
+              absentBlock = (
+                <AbsentBlock
+                  absent={absents[0]}
+                  currentDate={currentDate}
+                  personal={true}
+                />
+              );
+            } else {
+              for (const absent of absents) {
+                if (
+                  absent.from.getDate() === currentDay &&
+                  absent.from.getMonth() === currentMonth
+                ) {
+                  absentBlock = (
+                    <AbsentBlock
+                      absent={absent}
+                      currentDate={currentDate}
+                      personal={true}
+                    />
+                  );
+                  break;
+                }
               }
             }
-
             const weekDay = new Date(
               currentDate.getFullYear(),
               currentDate.getMonth(),
@@ -109,7 +113,9 @@ export default function PersonalCalendar({ absents }: PersonalCalendarProps) {
           },
         )}
       </div>
-      <MonthChanger date={currentDate} dateSetter={setCurrentDate} />
+      <div className={personalCalendarStyles.actionButtonsWrapper}>
+        <MonthChanger date={currentDate} dateSetter={setCurrentDate} />
+      </div>
     </>
   );
 }
