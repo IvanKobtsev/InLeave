@@ -1,11 +1,63 @@
 import styles from "../styles/Navbar.module.scss";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
+import { ERole } from "../types.ts";
 
-export default function Navbar() {
-  const [isAccountButtonsHidden, setIsAccountButtonsHidden] = useState(false);
+interface NavbarProps {
+  currentRole: ERole;
+}
+
+export default function Navbar({ currentRole }: NavbarProps) {
+  const [isAccountButtonsHidden, setIsAccountButtonsHidden] = useState(true);
 
   const menuRef = useRef<HTMLButtonElement>(null);
+
+  let linkToCalendar = (
+    <Link to={"/calendar/my"} id="MyCalendar" className={styles.button}>
+      Мой календарь
+    </Link>
+  );
+
+  let profileName = "Иванов Иван Иванович";
+
+  let profileMenuButton = (
+    <button
+          ref={menuRef}
+          onClick={() => setIsAccountButtonsHidden(!isAccountButtonsHidden)}
+          id="Profile"
+          className={`${styles.profileButton} ${styles.button} ${isAccountButtonsHidden ? "" : styles.active}`}
+        >
+          <div className={styles.profileIcon}></div>
+          {profileName}
+    </button>
+  )
+
+  switch (currentRole) {
+    case ERole.Teacher:
+    case ERole.Dean:
+    case ERole.Admin:
+      linkToCalendar = (
+        <Link to={"/calendar"} id="MyCalendar" className={styles.button}>
+          Календарь пропусков
+        </Link>
+      );
+      break;
+    case ERole.None:
+      linkToCalendar = (
+      <p></p>
+      );
+      profileMenuButton = (
+      <button
+          ref={menuRef}
+          id="Profile"
+          className={`${styles.profileButton} ${styles.button} ${isAccountButtonsHidden ? "" : styles.active}`}
+        >
+          <div className={styles.profileIcon}></div>
+          Вход
+      </button>
+      )
+      break;
+  }
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -30,18 +82,8 @@ export default function Navbar() {
         </div>
       </Link>
       <div className={styles.buttonsWrapper}>
-        <Link to={"/calendar/my"} id="MyCalendar" className={styles.button}>
-          Мой календарь
-        </Link>
-        <button
-          ref={menuRef}
-          onClick={() => setIsAccountButtonsHidden(!isAccountButtonsHidden)}
-          id="Profile"
-          className={`${styles.profileButton} ${styles.button} ${isAccountButtonsHidden ? "" : styles.active}`}
-        >
-          <div className={styles.profileIcon}></div>
-          Иванов Иван Иванович
-        </button>
+        {linkToCalendar}
+        {profileMenuButton}
       </div>
       <div
         className={`${styles.accountButtonsWrapper} ${isAccountButtonsHidden ? styles.hidden : ""}`}
