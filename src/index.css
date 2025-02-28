@@ -4,8 +4,11 @@
   --default-grey: #9d9d9d;
   --default-blue: #0060e6;
   --accepted-color: #71EB91;
+  --accepted-active-color: #1CE451;
   --rejected-color: #E59A9A;
+  --rejected-active-color: #FF2727;
   --pending-color: #EBEB71;
+  --pending-active-color: #F1F100;
 
   font-family: "Manrope", system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -27,6 +30,7 @@
   height: 100vh;
   box-sizing: border-box;
   overflow: hidden;
+  display: flex;
 }
 
 body {

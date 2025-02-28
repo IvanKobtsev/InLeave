@@ -1,24 +1,41 @@
 import styles from "../styles/PersonalCalendar.module.scss";
 import { getFirstDayOfMonth, getLastDayOfMonth } from "../static.ts";
 import { useRef, useState, MouseEvent, WheelEvent } from "react";
-import { AbsentData, MouseData } from "../types.ts";
+import { AbsentData, ERole, MouseData, StudentAbsents } from "../types.ts";
 import MonthChanger from "./MonthChanger.tsx";
 import DayHeader from "./DayHeader.tsx";
 import personalCalendarStyles from "../styles/PersonalCalendar.module.scss";
 import AbsentBlock from "./AbsentBlock.tsx";
+import AbsentPanel from "./AbsentPanel.tsx";
 
 interface PersonalCalendarProps {
-  absents: AbsentData[];
+  student: StudentAbsents;
 }
 
-export default function PersonalCalendar({ absents }: PersonalCalendarProps) {
+export default function PersonalCalendar({ student }: PersonalCalendarProps) {
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const mouseProps = useRef<MouseData>({
     position: { x: 0, y: 0 },
     velocity: { x: 0, y: 0 },
     isDragging: false,
   });
+
+  const [selectedAbsent, setSelectedAbsent] = useState<AbsentData | null>(null);
+
+  const absentBlockClickHandler = (absentId: string | null) => {
+    if (!hasUnsavedChanges) {
+      for (let i = 0; i < student.absents.length; i++) {
+        if (student.absents[i].id === absentId) {
+          setSelectedAbsent(student.absents[i]);
+          return;
+        }
+      }
+    } else {
+      alert("Unsaved changes.");
+    }
+  };
 
   const startDrag = (event: MouseEvent<HTMLDivElement>) => {
     mouseProps.current.isDragging = true;
@@ -31,8 +48,7 @@ export default function PersonalCalendar({ absents }: PersonalCalendarProps) {
 
     scrollRef.current!.scrollLeft +=
       (mouseProps.current.position.x -
-        event.pageX -
-        scrollRef.current!.offsetLeft) *
+        (event.pageX - scrollRef.current!.offsetLeft)) *
       10;
     mouseProps.current.position.x = event.pageX - scrollRef.current!.offsetLeft;
   };
@@ -42,11 +58,23 @@ export default function PersonalCalendar({ absents }: PersonalCalendarProps) {
   };
 
   const handleWheel = (event: WheelEvent<HTMLDivElement>) => {
-    scrollRef.current!.scrollLeft += event.deltaY * 4;
+    if (event.deltaY !== 0) {
+      scrollRef.current!.scrollLeft += event.deltaY * 4;
+    } else {
+      scrollRef.current!.scrollLeft += event.deltaX * 4;
+    }
   };
 
   return (
     <>
+      <AbsentPanel
+        hasUnsavedChanges={hasUnsavedChanges}
+        hasUnsavedChangesSetter={setHasUnsavedChanges}
+        watchingRole={ERole.Student}
+        student={student}
+        absent={selectedAbsent}
+        setSelectedAbsent={setSelectedAbsent}
+      />
       <div
         ref={scrollRef}
         className={`${styles.PersonalCalendar} ${styles.MyCalendar}`}
@@ -65,17 +93,18 @@ export default function PersonalCalendar({ absents }: PersonalCalendarProps) {
 
             if (
               index === 0 &&
-              absents[0].from < getFirstDayOfMonth(currentDate)
+              student.absents[0].from < getFirstDayOfMonth(currentDate)
             ) {
               absentBlock = (
                 <AbsentBlock
-                  absent={absents[0]}
+                  absent={student.absents[0]}
                   currentDate={currentDate}
                   personal={true}
+                  clickHandler={absentBlockClickHandler}
                 />
               );
             } else {
-              for (const absent of absents) {
+              for (const absent of student.absents) {
                 if (
                   absent.from.getDate() === currentDay &&
                   absent.from.getMonth() === currentMonth
@@ -85,6 +114,7 @@ export default function PersonalCalendar({ absents }: PersonalCalendarProps) {
                       absent={absent}
                       currentDate={currentDate}
                       personal={true}
+                      clickHandler={absentBlockClickHandler}
                     />
                   );
                   break;
