@@ -3,6 +3,7 @@ import MyCalendar from "./pages/MyCalendar.tsx";
 import NotFound from "./pages/NotFound.tsx";
 import LoginPage from "./pages/LoginPage.tsx"
 import RegistrationPage from "./pages/RegistrationPage.tsx"
+import AdminPanelPage from "./pages/AdminPanelPage.tsx"
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <Route path="/*" element={<NotFound />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/registration" element={<RegistrationPage />} />
+        <Route path="/admin" element={<AdminPanelPage />} />
 
       </Routes>
     </Router>
