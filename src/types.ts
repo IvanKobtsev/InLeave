@@ -14,6 +14,7 @@ export interface AbsentData {
   from: Date;
   to: Date;
   status: EAbsentStatus;
+  documents?: File[];
 }
 
 export interface StudentAbsents {
