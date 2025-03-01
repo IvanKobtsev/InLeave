@@ -1,7 +1,6 @@
 import styles from "../styles/Navbar.module.scss";
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
-import { ERole } from "../types.ts";
+import { useRef, useState } from "react";
 import { ERole } from "../types.ts";
 import { clickOutside } from "../hooks/clickOutside.ts";
 
@@ -24,15 +23,15 @@ export default function Navbar({ currentRole }: NavbarProps) {
 
   let profileMenuButton = (
     <button
-          ref={menuRef}
-          onClick={() => setIsAccountButtonsHidden(!isAccountButtonsHidden)}
-          id="Profile"
-          className={`${styles.profileButton} ${styles.button} ${isAccountButtonsHidden ? "" : styles.active}`}
-        >
-          <div className={styles.profileIcon}></div>
-          {profileName}
+      ref={menuRef}
+      onClick={() => setIsAccountButtonsHidden(!isAccountButtonsHidden)}
+      id="Profile"
+      className={`${styles.profileButton} ${styles.button} ${isAccountButtonsHidden ? "" : styles.active}`}
+    >
+      <div className={styles.profileIcon}></div>
+      {profileName}
     </button>
-  )
+  );
 
   switch (currentRole) {
     case ERole.Teacher:
@@ -45,27 +44,23 @@ export default function Navbar({ currentRole }: NavbarProps) {
       );
       break;
     case ERole.None:
-      linkToCalendar = (
-      <p></p>
-      );
+      linkToCalendar = <p></p>;
       profileMenuButton = (
-      <button
+        <button
           ref={menuRef}
           id="Profile"
           className={`${styles.profileButton} ${styles.button} ${isAccountButtonsHidden ? "" : styles.active}`}
         >
           <div className={styles.profileIcon}></div>
           Вход
-      </button>
-      )
+        </button>
+      );
       break;
   }
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsAccountButtonsHidden(true);
-      }
+  function handleClickOutside(event: MouseEvent) {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setIsAccountButtonsHidden(true);
     }
   }
 

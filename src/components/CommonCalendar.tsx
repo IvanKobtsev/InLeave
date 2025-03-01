@@ -164,6 +164,8 @@ export default function CommonCalendar({ absents }: CommonCalendarProps) {
     }
   }
 
+  const blockClickHandler = () => {};
+
   return (
     <div className={styles.listWrapper}>
       <div
@@ -251,6 +253,7 @@ export default function CommonCalendar({ absents }: CommonCalendarProps) {
                       absent={studentAbsents.absents[0]}
                       currentDate={currentDate}
                       personal={false}
+                      clickHandler={blockClickHandler}
                     />
                   );
                 } else {
@@ -265,6 +268,7 @@ export default function CommonCalendar({ absents }: CommonCalendarProps) {
                           currentDate={currentDate}
                           personal={false}
                           studentId={studentAbsents.id}
+                          clickHandler={blockClickHandler}
                         />
                       );
                       break;
