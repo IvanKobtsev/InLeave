@@ -1,3 +1,4 @@
+
 import { EAbsentStatus } from "./types.ts";
 
 export const getLastDayOfMonth = (date: Date): Date => {

@@ -1,6 +1,7 @@
 import styles from "../styles/Navbar.module.scss";
 import { Link } from "react-router-dom";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { ERole } from "../types.ts";
 import { ERole } from "../types.ts";
 import { clickOutside } from "../hooks/clickOutside.ts";
 
@@ -11,11 +12,27 @@ interface NavbarProps {
 export default function Navbar({ currentRole }: NavbarProps) {
   const [isAccountButtonsHidden, setIsAccountButtonsHidden] = useState(true);
 
+  const menuRef = useRef<HTMLButtonElement>(null);
+
   let linkToCalendar = (
     <Link to={"/calendar/my"} id="MyCalendar" className={styles.button}>
       Мой календарь
     </Link>
   );
+
+  let profileName = "Иванов Иван Иванович";
+
+  let profileMenuButton = (
+    <button
+          ref={menuRef}
+          onClick={() => setIsAccountButtonsHidden(!isAccountButtonsHidden)}
+          id="Profile"
+          className={`${styles.profileButton} ${styles.button} ${isAccountButtonsHidden ? "" : styles.active}`}
+        >
+          <div className={styles.profileIcon}></div>
+          {profileName}
+    </button>
+  )
 
   switch (currentRole) {
     case ERole.Teacher:
@@ -27,13 +44,28 @@ export default function Navbar({ currentRole }: NavbarProps) {
         </Link>
       );
       break;
+    case ERole.None:
+      linkToCalendar = (
+      <p></p>
+      );
+      profileMenuButton = (
+      <button
+          ref={menuRef}
+          id="Profile"
+          className={`${styles.profileButton} ${styles.button} ${isAccountButtonsHidden ? "" : styles.active}`}
+        >
+          <div className={styles.profileIcon}></div>
+          Вход
+      </button>
+      )
+      break;
   }
 
-  const menuRef = useRef<HTMLButtonElement>(null);
-
-  function handleClickOutside(event: MouseEvent) {
-    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-      setIsAccountButtonsHidden(true);
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsAccountButtonsHidden(true);
+      }
     }
   }
 
@@ -52,15 +84,7 @@ export default function Navbar({ currentRole }: NavbarProps) {
       </Link>
       <div className={styles.buttonsWrapper}>
         {linkToCalendar}
-        <button
-          ref={menuRef}
-          onClick={() => setIsAccountButtonsHidden(!isAccountButtonsHidden)}
-          id="Profile"
-          className={`${styles.profileButton} ${styles.button} ${isAccountButtonsHidden ? "" : styles.active}`}
-        >
-          <div className={styles.profileIcon}></div>
-          Иванов Иван Иванович
-        </button>
+        {profileMenuButton}
       </div>
       <div
         className={`${styles.accountButtonsWrapper} ${isAccountButtonsHidden ? styles.hidden : ""}`}

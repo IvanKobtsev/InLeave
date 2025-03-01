@@ -36,4 +36,5 @@ export enum ERole {
   Teacher,
   Dean,
   Admin,
+  None
 }
