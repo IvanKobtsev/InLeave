@@ -1,22 +1,43 @@
 import styles from "../styles/Navbar.module.scss";
 import { Link } from "react-router-dom";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
+import { ERole } from "../types.ts";
+import { clickOutside } from "../hooks/clickOutside.ts";
 
-export default function Navbar() {
-  const [isAccountButtonsHidden, setIsAccountButtonsHidden] = useState(false);
+interface NavbarProps {
+  currentRole: ERole;
+}
+
+export default function Navbar({ currentRole }: NavbarProps) {
+  const [isAccountButtonsHidden, setIsAccountButtonsHidden] = useState(true);
+
+  let linkToCalendar = (
+    <Link to={"/calendar/my"} id="MyCalendar" className={styles.button}>
+      Мой календарь
+    </Link>
+  );
+
+  switch (currentRole) {
+    case ERole.Teacher:
+    case ERole.Dean:
+    case ERole.Admin:
+      linkToCalendar = (
+        <Link to={"/calendar"} id="MyCalendar" className={styles.button}>
+          Календарь пропусков
+        </Link>
+      );
+      break;
+  }
 
   const menuRef = useRef<HTMLButtonElement>(null);
 
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setIsAccountButtonsHidden(true);
-      }
+  function handleClickOutside(event: MouseEvent) {
+    if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      setIsAccountButtonsHidden(true);
     }
+  }
 
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, []);
+  clickOutside(handleClickOutside);
 
   return (
     <div className={styles.Navbar}>
@@ -30,9 +51,7 @@ export default function Navbar() {
         </div>
       </Link>
       <div className={styles.buttonsWrapper}>
-        <Link to={"/calendar/my"} id="MyCalendar" className={styles.button}>
-          Мой календарь
-        </Link>
+        {linkToCalendar}
         <button
           ref={menuRef}
           onClick={() => setIsAccountButtonsHidden(!isAccountButtonsHidden)}
