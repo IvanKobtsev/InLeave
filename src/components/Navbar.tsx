@@ -2,6 +2,8 @@ import styles from "../styles/Navbar.module.scss";
 import { Link } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { ERole } from "../types.ts";
+import { ERole } from "../types.ts";
+import { clickOutside } from "../hooks/clickOutside.ts";
 
 interface NavbarProps {
   currentRole: ERole;
@@ -65,10 +67,9 @@ export default function Navbar({ currentRole }: NavbarProps) {
         setIsAccountButtonsHidden(true);
       }
     }
+  }
 
-    document.addEventListener("click", handleClickOutside);
-    return () => document.removeEventListener("click", handleClickOutside);
-  }, []);
+  clickOutside(handleClickOutside);
 
   return (
     <div className={styles.Navbar}>

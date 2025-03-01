@@ -9,6 +9,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  z-index: 10;
 
   .logoWrapper {
     display: flex;
@@ -155,5 +156,9 @@
     .signOutButton::before {
       background: url("../assets/svg/close.svg") center center;
     }
+  }
+
+  :global(#root):has(&) {
+    padding-top: 115px;
   }
 }

@@ -1,5 +1,12 @@
+
+import { EAbsentStatus } from "./types.ts";
+
 export const getLastDayOfMonth = (date: Date): Date => {
   return new Date(date.getFullYear(), date.getMonth() + 1, 0);
+};
+
+export const getFirstDayOfMonth = (date: Date): Date => {
+  return new Date(date.getFullYear(), date.getMonth());
 };
 
 export const addLeadingZero = (num: number) => {
@@ -25,6 +32,22 @@ export const getDayOfWeekText = (num: number): string => {
       return "суббота";
   }
 };
+
+export function getAbsentStatusText(status: EAbsentStatus): string {
+  switch (status) {
+    case EAbsentStatus.Accepted:
+      return "одобрен";
+    case EAbsentStatus.Rejected:
+      return "отклонён";
+    default:
+    case EAbsentStatus.Pending:
+      return "на проверке";
+  }
+}
+
+export function getFullDateText(date: Date): string {
+  return `${addLeadingZero(date.getDate())}.${addLeadingZero(date.getMonth() + 1)}.${date.getFullYear()}`;
+}
 
 export function getDateDifferenceInDays(date1: Date, date2: Date): number {
   return Math.floor(
@@ -60,4 +83,17 @@ export function getMonthText(month: number): string {
     case 11:
       return "Декабрь";
   }
+}
+
+export function getFileExtension(fileName: string): string {
+  return fileName.substring(fileName.lastIndexOf("."));
+}
+
+export function getFileCountText(fileCount: number): string {
+  if (fileCount === 1) {
+    return `${fileCount} файл`;
+  } else if (fileCount <= 4) {
+    return `${fileCount} файла`;
+  }
+  return `${fileCount} файлов`;
 }

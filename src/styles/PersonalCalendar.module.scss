@@ -1,0 +1,207 @@
+.PersonalCalendar {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  cursor: grab;
+  overflow: hidden;
+  //padding-right: 20px;
+  box-sizing: border-box;
+  //scroll-behavior: smooth;
+  pointer-events: all;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  .day {
+    position: relative;
+    min-width: 275px;
+    height: fit-content;
+    box-sizing: border-box;
+
+    .dayBody {
+      position: relative;
+      width: 100%;
+      height: calc(100% - 60px);
+      padding: 15px;
+      box-sizing: border-box;
+    }
+
+    .absentBlock {
+      user-select: none;
+      position: absolute;
+      height: 150px;
+      border-radius: 20px;
+      width: calc(var(--percentage) - 30px);
+      cursor: pointer;
+      z-index: 2;
+      transition: 0.2s all;
+
+      &.absentAbruptEnd {
+        border-radius: 20px 0 0 20px;
+        width: calc(var(--percentage) - 15px);
+      }
+
+      &.absentAbruptStart {
+        border-radius: 0 20px 20px 0;
+        width: calc(var(--percentage) - 15px);
+        translate: -15px 0;
+      }
+
+      &.absentAbrupt {
+        border-radius: 0;
+        width: calc(var(--percentage));
+        translate: -15px 0;
+      }
+    }
+
+    &::after {
+      content: "";
+      position: absolute;
+      right: 0;
+      top: 50%;
+      width: 1px;
+      height: 100%;
+      background-color: var(--default-grey);
+      translate: 0 -50%;
+      z-index: -1;
+    }
+
+    //&:last-child::after {
+    //  display: none;
+    //}
+
+    .absentCell {
+      position: relative;
+      width: 100%;
+      height: 70px;
+      padding: 10px 15px;
+      box-sizing: border-box;
+      user-select: none;
+      &::after {
+        content: "";
+        width: calc(100%);
+        height: 1px;
+        background-color: var(--default-grey);
+        position: absolute;
+        bottom: 0;
+        left: 0;
+      }
+    }
+
+    //&:first-child {
+    //  .absentCell::after {
+    //    left: 15px;
+    //  }
+    //}
+  }
+
+  .absentPending {
+    background-color: var(--pending-color);
+
+    &.active {
+      background-color: var(--pending-active-color);
+    }
+  }
+
+  .absentAccepted {
+    background-color: var(--accepted-color);
+
+    &.active {
+      background-color: var(--accepted-active-color);
+    }
+  }
+
+  .absentRejected {
+    background-color: var(--rejected-color);
+
+    &.active {
+      background-color: var(--rejected-active-color);
+    }
+  }
+}
+
+.calendarHeader {
+  position: relative;
+  z-index: 8;
+  display: flex;
+  width: 100%;
+  background-color: #fff;
+  overflow: hidden;
+  transition: 0.2s all;
+  //scroll-behavior: smooth;
+}
+
+.dayHeader {
+  min-width: 275px;
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 24px;
+  color: var(--default-grey);
+  padding: 0 15px;
+  height: 60px;
+  user-select: none;
+
+  &:last-child::before {
+    display: none;
+  }
+}
+
+.weekend {
+  background-color: #ff9e9e22;
+}
+
+.cellBorders {
+  box-sizing: border-box;
+
+  &::after,
+  &::before {
+    content: "";
+    position: absolute;
+    background-color: var(--default-grey);
+  }
+
+  &::after {
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 1px;
+  }
+
+  &::before {
+    right: 0;
+    height: 100%;
+    width: 1px;
+    top: 0;
+  }
+}
+
+.MyCalendar {
+  scroll-behavior: smooth;
+}
+
+.day.personalDay {
+  height: 100%;
+}
+
+.actionButtonsWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: center;
+  width: fit-content;
+  height: fit-content;
+  position: fixed;
+  right: 42px;
+  bottom: 42px;
+  z-index: 10;
+}
+
+.calendarWrapper {
+  display: flex;
+  height: 100%;
+  width: 100vw;
+  pointer-events: none;
+}

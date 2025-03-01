@@ -1,0 +1,42 @@
+.MonthChanger {
+  bottom: 42px;
+  right: 42px;
+  width: fit-content;
+  box-sizing: border-box;
+  height: 80px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--default-blue);
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+  border-radius: 25px;
+  padding: 0 16px;
+  z-index: 9;
+
+  .leftButton,
+  .rightButton {
+    width: 50px;
+    height: 50px;
+    border: none;
+    cursor: pointer;
+    translate: 0 2px;
+  }
+
+  .leftButton {
+    background: url("../assets/svg/arrow-left.svg");
+  }
+
+  .rightButton {
+    background: url("../assets/svg/arrow-right.svg");
+  }
+
+  .dateText {
+    display: flex;
+    justify-content: space-between;
+    min-width: 230px;
+    text-align: center;
+    color: #fff;
+    font-size: 32px;
+    margin: 0 18px;
+  }
+}

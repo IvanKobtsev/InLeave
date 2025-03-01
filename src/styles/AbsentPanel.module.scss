@@ -1,0 +1,219 @@
+.AbsentPanel {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: flex-end;
+  height: 100%;
+  background-color: #fff;
+  position: relative;
+  z-index: 9;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.5);
+
+  .AbsentSectionsWrapper {
+    position: relative;
+    min-width: 400px;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: flex-end;
+    height: 100%;
+  }
+
+  .absentSection {
+    position: relative;
+    box-sizing: border-box;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 17px;
+
+    &::after {
+      content: "";
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      height: 1px;
+      background-color: var(--default-grey);
+    }
+  }
+
+  .AbsentPanelHeader {
+    font-size: 24px;
+    color: var(--default-grey);
+    padding: 17px 22px;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    height: 60px;
+  }
+
+  .AbsentPanelClose {
+    background: url("../assets/svg/close-search.svg") center center no-repeat;
+    border: none;
+    background-size: 60px 60px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    transition: 0.2s all;
+    translate: 10px 2px;
+    &:hover {
+      filter: brightness(0.8);
+    }
+  }
+
+  .studentInfoSection {
+    justify-content: center;
+    align-items: flex-start;
+
+    .studentName {
+      font-size: 24px;
+      translate: 0 -5px;
+    }
+  }
+
+  .absentInfoSection {
+    .absentStatus {
+      width: 100%;
+      height: 45px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 22px;
+      color: #fff;
+      border-radius: 20px;
+
+      &.accepted {
+        background-color: var(--accepted-active-color);
+      }
+
+      &.rejected {
+        background-color: var(--rejected-active-color);
+      }
+
+      &.pending {
+        background-color: var(--pending-active-color);
+      }
+    }
+
+    .absentInfoWrapper {
+      display: flex;
+      justify-content: space-between;
+      font-size: 20px;
+      color: var(--default-grey);
+      margin-top: 10px;
+
+      .absentInfoText {
+        color: var(--default-font-color);
+        font-size: 24px;
+        font-weight: 500;
+      }
+    }
+  }
+
+  .absentDocsSection {
+    .absentDocumentsTitle {
+      font-size: 24px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .absentDocsCounter {
+    }
+
+    .absentDocumentsWrapper {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-start;
+      align-items: center;
+
+      .absentDoc {
+        cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: fit-content;
+        padding: 0 14px;
+        box-sizing: border-box;
+        height: 60px;
+        font-size: 24px;
+        font-weight: 500;
+        color: #fff;
+        margin-top: 15px;
+        background-color: #91b5e7;
+        border-radius: 15px;
+        margin-right: 15px;
+
+        &:hover {
+        }
+      }
+    }
+
+    .uploadDocument {
+      background-color: var(--default-blue);
+      font-family: "Manrope", sans-serif;
+      font-size: 24px;
+      padding: 10px;
+      box-sizing: border-box;
+      border-radius: 20px;
+      border: none;
+      cursor: pointer;
+      margin-top: 20px;
+      color: #fff;
+      text-align: center;
+    }
+
+    &::after {
+      display: none;
+    }
+  }
+
+  .absentActionsWrapper {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 80px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-sizing: border-box;
+    padding: 10px 15px;
+
+    &::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      bottom: 80px;
+      height: 1px;
+      width: 100%;
+      background-color: var(--default-grey);
+    }
+
+    .absentCancel,
+    .absentAccept {
+      width: fit-content;
+      height: fit-content;
+      font-size: 22px;
+      color: #fff;
+      border-radius: 15px;
+      padding: 8px 14px;
+      cursor: pointer;
+    }
+
+    .absentCancel {
+      background-color: var(--rejected-active-color);
+    }
+
+    .absentAccept {
+      background-color: var(--accepted-active-color);
+    }
+  }
+
+  .absentGrayedOut {
+    pointer-events: none;
+    filter: grayscale(100%);
+    opacity: 0.6;
+  }
+}
