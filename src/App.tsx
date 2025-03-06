@@ -8,6 +8,8 @@ import ProfilePage from "./pages/ProfilePage.tsx";
 import { EError } from "./types.ts";
 import ErrorPage from "./pages/ErrorPage.tsx";
 
+// FOR TEST
+
 function App() {
   return (
     <Router>
