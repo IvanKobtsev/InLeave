@@ -8,7 +8,7 @@ import ProfilePage from "./pages/ProfilePage.tsx";
 import { EError } from "./types.ts";
 import ErrorPage from "./pages/ErrorPage.tsx";
 
-// FOR TEST 2
+// FOR TEST 3
 
 function App() {
   return (
