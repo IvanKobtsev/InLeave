@@ -1,5 +1,4 @@
 import styles from "../styles/PersonalCalendar.module.scss";
-import absentStyles from "../styles/AbsentPanel.module.scss";
 import stylesCommon from "../styles/CommonCalendar.module.scss";
 import {
   getDateDifferenceInDays,
@@ -7,8 +6,6 @@ import {
   getLastDayOfMonth,
 } from "../static.ts";
 import { AbsentData } from "../types.ts";
-import { clickOutside } from "../hooks/clickOutside.ts";
-import { useState } from "react";
 
 interface AbsentBlockProps {
   absent: AbsentData;
@@ -16,6 +13,7 @@ interface AbsentBlockProps {
   personal: boolean;
   studentId?: string;
   clickHandler: (absentId: string | null) => void;
+  selectedId?: string | undefined;
 }
 
 export default function AbsentBlock({
@@ -24,6 +22,7 @@ export default function AbsentBlock({
   personal,
   studentId,
   clickHandler,
+  selectedId,
 }: AbsentBlockProps) {
   let differenceInDays = getDateDifferenceInDays(absent.from, absent.to),
     absentExtraStyle = "";
@@ -80,23 +79,11 @@ export default function AbsentBlock({
   if (personal) {
   }
 
-  const [isActive, setIsActive] = useState(false);
+  let isActive = false;
 
-  function handleClickOutside(event: MouseEvent) {
-    if (
-      (blockId !== (event.target as HTMLDivElement).id &&
-        (event.target as HTMLDivElement).classList.contains(
-          styles.absentBlock,
-        )) ||
-      (event.target as HTMLButtonElement).classList.contains(
-        absentStyles.AbsentPanelClose,
-      )
-    ) {
-      setIsActive(false);
-    }
+  if (selectedId === absent.id) {
+    isActive = true;
   }
-
-  clickOutside(handleClickOutside);
 
   return (
     <>
@@ -104,10 +91,13 @@ export default function AbsentBlock({
       <div
         id={blockId}
         className={`${personal ? styles.absentBlock : stylesCommon.absentBlock} ${absentStatuses[absent.status]} ${absentExtraStyle} ${isActive ? styles.active : ""}`}
-        onClick={(_) => {
-          clickHandler(absent.id);
-          setIsActive(true);
-        }}
+        onClick={
+          personal
+            ? (_) => {
+                clickHandler(absent.id);
+              }
+            : () => {}
+        }
       ></div>
     </>
   );

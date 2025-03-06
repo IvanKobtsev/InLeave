@@ -1,0 +1,56 @@
+.ToggleableTextInput {
+  position: relative;
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  transition: 0.2s all;
+
+  .label {
+    font-size: 20px;
+  }
+
+  .input {
+    font-size: 20px;
+    background-color: transparent;
+    color: var(--default-font-color);
+    font-family: "Manrope", sans-serif;
+    border: none;
+    width: 100%;
+    height: 100%;
+    text-align: right;
+    cursor: text;
+
+    &:focus {
+      outline: none;
+    }
+
+    &Wrapper {
+      position: relative;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      width: 100%;
+    }
+  }
+
+  &::after {
+    content: "";
+    display: block;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    border: 0 dotted var(--default-grey);
+    border-width: 1px 0 0 0;
+  }
+
+  .editable {
+    background-color: var(--default-bg-color);
+    padding: 0 10px;
+    border-radius: 5px;
+
+    &::after {
+      display: none;
+    }
+  }
+}

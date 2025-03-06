@@ -1,6 +1,13 @@
 import styles from "../styles/AbsentPanel.module.scss";
-import { AbsentData, EAbsentStatus, ERole, StudentAbsents } from "../types.ts";
 import {
+  AbsentData,
+  EAbsentStatus,
+  ERole,
+  FileData,
+  StudentAbsents,
+} from "../types.ts";
+import {
+  downloadFile,
   getAbsentStatusText,
   getDateDifferenceInDays,
   getFileCountText,
@@ -9,30 +16,30 @@ import {
 } from "../static.ts";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChangeEvent, useState } from "react";
+import FileBlock from "./FileBlock.tsx";
 
 interface AbsentPanelProps {
   student: StudentAbsents;
   absent: AbsentData | null;
-  setSelectedAbsent: (
-    value:
-      | ((prevState: AbsentData | null) => AbsentData | null)
-      | AbsentData
-      | null,
-  ) => void;
   watchingRole: ERole;
   hasUnsavedChangesSetter: (
     value: ((prevState: boolean) => boolean) | boolean,
   ) => void;
   hasUnsavedChanges: boolean;
+  deleteHandler?: () => void;
+  saveHandler?: () => void;
+  handlePanelClose?: () => void;
 }
 
 export default function AbsentPanel({
   student,
   absent,
-  setSelectedAbsent,
   watchingRole,
   hasUnsavedChangesSetter,
   hasUnsavedChanges,
+  deleteHandler,
+  saveHandler,
+  handlePanelClose,
 }: AbsentPanelProps) {
   const absentStatusStyles = [styles.pending, styles.accepted, styles.rejected];
   const [_, setRefresher] = useState(0);
@@ -48,10 +55,24 @@ export default function AbsentPanel({
       if (absent.documents !== undefined) {
         absent.documents = [
           ...absent.documents,
-          ...Array.from(event.target.files),
+          ...Array.from(event.target.files).map(
+            (file, index): FileData => ({
+              id: (absent.documents!.length + index).toString(),
+              extension: getFileExtension(file.name),
+              file: file,
+            }),
+          ),
         ];
       } else {
-        absent.documents = [...Array.from(event.target.files)];
+        absent.documents = [
+          ...Array.from(event.target.files).map(
+            (file, index): FileData => ({
+              id: index.toString(),
+              extension: getFileExtension(file.name),
+              file: file,
+            }),
+          ),
+        ];
       }
 
       hasUnsavedChangesSetter(true);
@@ -66,8 +87,11 @@ export default function AbsentPanel({
       case ERole.Student:
         absentActions = (
           <div className={styles.absentActionsWrapper}>
-            <div className={styles.absentCancel}>Удалить пропуск</div>
+            <div onClick={deleteHandler} className={styles.absentCancel}>
+              Удалить пропуск
+            </div>
             <div
+              onClick={saveHandler}
               className={`${styles.absentAccept} ${hasUnsavedChanges ? null : styles.absentGrayedOut}`}
             >
               Сохранить
@@ -102,6 +126,28 @@ export default function AbsentPanel({
     }
   }
 
+  const deleteFileHandler = (id: string) => {
+    if (absent !== undefined && absent!.documents !== undefined) {
+      absent!.documents.forEach((file: FileData, index) => {
+        if (file.id === id) {
+          absent!.documents!.splice(index, 1);
+        }
+      });
+      hasUnsavedChangesSetter(true);
+      refresh();
+    }
+  };
+
+  const downloadFileHandler = (id: string) => {
+    if (absent !== undefined && absent!.documents !== undefined) {
+      absent!.documents.forEach((file: FileData) => {
+        if (file.id === id) {
+          downloadFile(file.file);
+        }
+      });
+    }
+  };
+
   return (
     <AnimatePresence mode="wait">
       {absent !== null ? (
@@ -128,7 +174,7 @@ export default function AbsentPanel({
               Пропуск студента
               <button
                 className={styles.AbsentPanelClose}
-                onClick={() => setSelectedAbsent(null)}
+                onClick={handlePanelClose}
               ></button>
             </div>
             <div
@@ -170,6 +216,18 @@ export default function AbsentPanel({
                   {`${getDateDifferenceInDays(absent.from, absent.to) + 1} д.`}
                 </div>
               </div>
+              {absent.description !== undefined ? (
+                <div
+                  className={`${styles.absentInfoWrapper} ${absent.description.length > 18 ? styles.opened : ""}`}
+                >
+                  Примечание:
+                  <div className={styles.absentInfoDescription}>
+                    {`"${absent.description}"`}
+                  </div>
+                </div>
+              ) : (
+                ""
+              )}
             </div>
             <div
               className={`${styles.absentDocsSection} ${styles.absentSection}`}
@@ -180,17 +238,20 @@ export default function AbsentPanel({
                   {" "}
                   (
                   {absent.documents !== undefined
-                    ? getFileCountText(absent.documents.length)
-                    : "нет файлов"}
+                    ? getFileCountText(absent.documents!.length)
+                    : "0 файлов"}
                   )
                 </div>
               </div>
               <div className={styles.absentDocumentsWrapper}>
                 {absent.documents !== undefined
-                  ? Array.from(absent.documents).map((file, index) => (
-                      <div key={index} className={styles.absentDoc}>
-                        {getFileExtension(file.name)}
-                      </div>
+                  ? Array.from(absent.documents).map((fileData, index) => (
+                      <FileBlock
+                        key={index}
+                        fileData={fileData}
+                        deleteHandler={deleteFileHandler}
+                        downloadHandler={downloadFileHandler}
+                      />
                     ))
                   : ""}
               </div>

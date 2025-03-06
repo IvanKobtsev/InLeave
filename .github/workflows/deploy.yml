@@ -1,0 +1,31 @@
+name: Deploy Frontend to Ubuntu Server
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H 103.249.133.18 >> ~/.ssh/known_hosts
+
+      - name: Deploy and Build on Server
+        run: |
+          ssh root@103.249.133.18 << 'EOF'
+            cd /var/www/InLeave || (mkdir -p /var/www/InLeave && cd /var/www/InLeave)
+            git pull origin main || git clone git@github.com:IvanKobtsev/InLeave.git .
+            yarn install --frozen-lockfile
+            yarn build
+            sudo systemctl restart nginx
+          EOF

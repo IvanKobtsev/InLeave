@@ -1,14 +1,14 @@
 import styles from "../styles/Navbar.module.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useRef, useState } from "react";
 import { ERole } from "../types.ts";
 import { clickOutside } from "../hooks/clickOutside.ts";
+import { useUser } from "./UserProvider.tsx";
 
-interface NavbarProps {
-  currentRole: ERole;
-}
+export default function Navbar() {
+  const { user } = useUser();
 
-export default function Navbar({ currentRole }: NavbarProps) {
+  const navigate = useNavigate();
   const [isAccountButtonsHidden, setIsAccountButtonsHidden] = useState(true);
 
   const menuRef = useRef<HTMLButtonElement>(null);
@@ -33,29 +33,39 @@ export default function Navbar({ currentRole }: NavbarProps) {
     </button>
   );
 
-  switch (currentRole) {
-    case ERole.Teacher:
-    case ERole.Dean:
-    case ERole.Admin:
-      linkToCalendar = (
-        <Link to={"/calendar"} id="MyCalendar" className={styles.button}>
-          Календарь пропусков
-        </Link>
-      );
-      break;
-    case ERole.None:
-      linkToCalendar = <p></p>;
-      profileMenuButton = (
-        <button
-          ref={menuRef}
-          id="Profile"
-          className={`${styles.profileButton} ${styles.button} ${isAccountButtonsHidden ? "" : styles.active}`}
-        >
-          <div className={styles.profileIcon}></div>
-          Вход
-        </button>
-      );
-      break;
+  if (user !== null) {
+    for (const currentRole of user.roles) {
+      switch (currentRole) {
+        case ERole.Teacher:
+        case ERole.Dean:
+        case ERole.Admin:
+          linkToCalendar = (
+            <>
+              {linkToCalendar}
+              <Link to={"/calendar"} id="calendar" className={styles.button}>
+                Календарь пропусков
+              </Link>
+            </>
+          );
+          break;
+        case ERole.None:
+          linkToCalendar = <p></p>;
+          profileMenuButton = (
+            <button
+              onClick={() => {
+                navigate("/login");
+              }}
+              ref={menuRef}
+              id="Profile"
+              className={`${styles.profileButton} ${styles.button} ${isAccountButtonsHidden ? "" : styles.active}`}
+            >
+              <div className={styles.profileIcon}></div>
+              Вход
+            </button>
+          );
+          break;
+      }
+    }
   }
 
   function handleClickOutside(event: MouseEvent) {

@@ -1,6 +1,6 @@
 import Navbar from "../components/Navbar.tsx";
 import CommonCalendar from "../components/CommonCalendar.tsx";
-import { EAbsentStatus, ERole, StudentAbsents } from "../types.ts";
+import { EAbsentStatus, StudentAbsents } from "../types.ts";
 
 export default function StudentsCalendar() {
   const studentsAbsents: StudentAbsents[] = [
@@ -602,7 +602,7 @@ export default function StudentsCalendar() {
 
   return (
     <>
-      <Navbar currentRole={ERole.Teacher} />
+      <Navbar />
       <CommonCalendar absents={studentsAbsents} />
     </>
   );

@@ -1,0 +1,73 @@
+.ProfilePage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .profileInfo {
+    width: 800px;
+    height: fit-content;
+    background-color: #fff;
+    border-radius: 20px;
+    padding: 10px 20px 15px 20px;
+    box-sizing: border-box;
+
+    .name {
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      font-size: 28px;
+      padding-bottom: 20px;
+    }
+
+    .roles {
+      padding: 5px 0;
+      font-size: 16px;
+    }
+  }
+
+  .role {
+    &::after {
+      content: ", ";
+    }
+
+    &:last-child::after {
+      display: none;
+    }
+  }
+
+  .otherInfoWrapper {
+    .otherInfoEntry {
+      font-size: 18px;
+    }
+  }
+
+  .bottomLine {
+    position: relative;
+
+    &::after {
+      content: "";
+      display: block;
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      translate: -50% 0;
+      width: calc(100% + 40px);
+      height: 1px;
+      background-color: var(--default-grey);
+    }
+
+    //&:last-child::after {
+    //  display: none;
+    //}
+  }
+
+  .educations {
+    margin-top: 10px;
+    font-size: 24px;
+  }
+
+  .submit {
+  }
+}

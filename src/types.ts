@@ -9,12 +9,19 @@ export interface Vector {
   y: number;
 }
 
+export interface FileData {
+  id: string;
+  extension: string;
+  file: File;
+}
+
 export interface AbsentData {
   id: string;
   from: Date;
   to: Date;
+  description?: string;
   status: EAbsentStatus;
-  documents?: File[];
+  documents?: FileData[];
 }
 
 export interface StudentAbsents {
@@ -36,5 +43,34 @@ export enum ERole {
   Teacher,
   Dean,
   Admin,
-  None
+  None,
+}
+
+export enum EError {
+  BadRequest = 400,
+  Unauthorized = 401,
+  Forbidden = 403,
+  NotFound = 404,
+  InternalServerError = 500,
+}
+
+export interface Education {
+  id: string;
+  basis: string;
+  faculty: string;
+  group: string;
+}
+
+export interface User {
+  id: string;
+  name: string;
+  email: string;
+  roles: ERole[];
+  paidEducation?: Education;
+  budgetaryEducation?: Education;
+}
+
+export interface ErrorData {
+  code: number;
+  message: string;
 }

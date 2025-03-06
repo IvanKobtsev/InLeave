@@ -1,12 +1,11 @@
 import Navbar from "../components/Navbar.tsx";
 import styles from "../styles/Login.module.scss";
 import { Link } from "react-router-dom";
-import { ERole } from "../types.ts";
 
 export default function LoginPage() {
   return (
     <>
-      <Navbar currentRole={ERole.None} />
+      <Navbar />
       <div className={styles.LoginForm}>
         <div className={styles.leftSide}>
           <div className={styles.textAndButton}>

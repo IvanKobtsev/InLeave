@@ -9,6 +9,12 @@
   //scroll-behavior: smooth;
   pointer-events: all;
 
+  &Wrapper {
+    display: flex;
+    height: 100%;
+    overflow: hidden;
+  }
+
   &:active {
     cursor: grabbing;
   }

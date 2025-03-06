@@ -1,12 +1,11 @@
 import Navbar from "../components/Navbar.tsx";
 import styles from "../styles/Registration.module.scss";
 import { Link } from "react-router-dom";
-import { ERole } from "../types.ts";
 
 export default function RegistrationPage() {
   return (
     <>
-      <Navbar currentRole={ERole.None} />
+      <Navbar />
       <div className={styles.RegistrationForm}>
         <div className={styles.leftSide}>
           <div className={styles.textAndButton}>

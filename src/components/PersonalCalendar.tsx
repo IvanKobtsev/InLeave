@@ -25,15 +25,20 @@ export default function PersonalCalendar({ student }: PersonalCalendarProps) {
   const [selectedAbsent, setSelectedAbsent] = useState<AbsentData | null>(null);
 
   const absentBlockClickHandler = (absentId: string | null) => {
-    if (!hasUnsavedChanges) {
-      for (let i = 0; i < student.absents.length; i++) {
-        if (student.absents[i].id === absentId) {
-          setSelectedAbsent(student.absents[i]);
-          return;
-        }
+    if (
+      hasUnsavedChanges &&
+      !confirm(
+        "У вас есть несохранённые изменения! Уверены, что хотите закрыть меню?",
+      )
+    )
+      return;
+
+    setHasUnsavedChanges(false);
+    for (let i = 0; i < student.absents.length; i++) {
+      if (student.absents[i].id === absentId) {
+        setSelectedAbsent(structuredClone(student.absents[i]));
+        return;
       }
-    } else {
-      alert("Unsaved changes.");
     }
   };
 
@@ -65,15 +70,52 @@ export default function PersonalCalendar({ student }: PersonalCalendarProps) {
     }
   };
 
+  const deleteAbsent = () => {
+    // Send delete request
+    for (let i = 0; i < student.absents.length; i++) {
+      if (student.absents[i].id === selectedAbsent?.id) {
+        student.absents.splice(i, 1);
+        setSelectedAbsent(null);
+        setHasUnsavedChanges(false);
+        return;
+      }
+    }
+  };
+
+  const saveAbsent = () => {
+    for (let i = 0; i < student.absents.length; i++) {
+      if (student.absents[i].id === selectedAbsent?.id) {
+        student.absents[i] = selectedAbsent;
+        setHasUnsavedChanges(false);
+        return;
+      }
+    }
+  };
+
+  const closePanel = () => {
+    if (
+      hasUnsavedChanges &&
+      !confirm(
+        "У вас есть несохранённые изменения! Уверены, что хотите закрыть меню?",
+      )
+    )
+      return;
+
+    setHasUnsavedChanges(false);
+    setSelectedAbsent(null);
+  };
+
   return (
-    <>
+    <div className={styles.PersonalCalendarWrapper}>
       <AbsentPanel
+        deleteHandler={deleteAbsent}
+        saveHandler={saveAbsent}
         hasUnsavedChanges={hasUnsavedChanges}
         hasUnsavedChangesSetter={setHasUnsavedChanges}
         watchingRole={ERole.Student}
         student={student}
         absent={selectedAbsent}
-        setSelectedAbsent={setSelectedAbsent}
+        handlePanelClose={closePanel}
       />
       <div
         ref={scrollRef}
@@ -100,6 +142,7 @@ export default function PersonalCalendar({ student }: PersonalCalendarProps) {
                   absent={student.absents[0]}
                   currentDate={currentDate}
                   personal={true}
+                  selectedId={selectedAbsent?.id}
                   clickHandler={absentBlockClickHandler}
                 />
               );
@@ -114,6 +157,7 @@ export default function PersonalCalendar({ student }: PersonalCalendarProps) {
                       absent={absent}
                       currentDate={currentDate}
                       personal={true}
+                      selectedId={selectedAbsent?.id}
                       clickHandler={absentBlockClickHandler}
                     />
                   );
@@ -146,6 +190,6 @@ export default function PersonalCalendar({ student }: PersonalCalendarProps) {
       <div className={personalCalendarStyles.actionButtonsWrapper}>
         <MonthChanger date={currentDate} dateSetter={setCurrentDate} />
       </div>
-    </>
+    </div>
   );
 }

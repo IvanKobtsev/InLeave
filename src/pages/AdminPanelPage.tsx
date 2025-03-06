@@ -1,12 +1,20 @@
 import Navbar from "../components/Navbar.tsx";
 import styles from "../styles/AdminPanel.module.scss";
 import { Link } from "react-router-dom";
-import { ERole } from "../types.ts";
+import { EError, ERole } from "../types.ts";
+import ErrorPage from "./ErrorPage.tsx";
+import { useUser } from "../components/UserProvider.tsx";
 
 export default function AdminPanelPage() {
+  const { user } = useUser();
+
+  if (!user || !user.roles.includes(ERole.Admin)) {
+    return <ErrorPage code={EError.Forbidden} />;
+  }
+
   return (
     <>
-      <Navbar currentRole={ERole.Admin} />
+      <Navbar />
       <div className={styles.adminPanel}>
         <div className={styles.sideBar}>
           <div className={styles.profileSection}>

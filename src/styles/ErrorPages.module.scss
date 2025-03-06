@@ -1,0 +1,26 @@
+.ErrorPage {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  .errorContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .errorCode {
+    font-size: 100px;
+    color: red;
+    text-shadow: 0 0 5px #fff;
+  }
+
+  .errorMessage {
+    font-size: 30px;
+    text-align: center;
+    width: 400px;
+  }
+}

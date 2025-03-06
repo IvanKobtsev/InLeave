@@ -29,8 +29,6 @@
 #root {
   height: 100vh;
   box-sizing: border-box;
-  overflow: hidden;
-  display: flex;
 }
 
 body {

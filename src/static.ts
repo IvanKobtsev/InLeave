@@ -1,5 +1,4 @@
-
-import { EAbsentStatus } from "./types.ts";
+import { EAbsentStatus, ERole } from "./types.ts";
 
 export const getLastDayOfMonth = (date: Date): Date => {
   return new Date(date.getFullYear(), date.getMonth() + 1, 0);
@@ -32,6 +31,22 @@ export const getDayOfWeekText = (num: number): string => {
       return "суббота";
   }
 };
+
+export function getRoleText(role: ERole): string {
+  switch (role) {
+    case ERole.Admin:
+      return "админ";
+    case ERole.Dean:
+      return "деканат";
+    case ERole.Teacher:
+      return "преподаватель";
+    case ERole.Student:
+      return "студент";
+    default:
+    case ERole.None:
+      return "";
+  }
+}
 
 export function getAbsentStatusText(status: EAbsentStatus): string {
   switch (status) {
@@ -92,8 +107,19 @@ export function getFileExtension(fileName: string): string {
 export function getFileCountText(fileCount: number): string {
   if (fileCount === 1) {
     return `${fileCount} файл`;
-  } else if (fileCount <= 4) {
+  } else if (fileCount > 1 && fileCount <= 4) {
     return `${fileCount} файла`;
   }
   return `${fileCount} файлов`;
+}
+
+export function downloadFile(file: File) {
+  const url = URL.createObjectURL(file);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = file.name;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
 }
