@@ -1,9 +1,8 @@
-import Navbar from "../components/Navbar.tsx";
 import styles from "../styles/AdminPanel.module.scss";
 import { Link } from "react-router-dom";
-import { EError, ERole } from "../types.ts";
+import { EError, ERole } from "../static/types.ts";
 import ErrorPage from "./ErrorPage.tsx";
-import { useUser } from "../components/UserProvider.tsx";
+import { useUser } from "../hooks/UserProvider.tsx";
 
 export default function AdminPanelPage() {
   const { user } = useUser();
@@ -14,7 +13,6 @@ export default function AdminPanelPage() {
 
   return (
     <>
-      <Navbar />
       <div className={styles.adminPanel}>
         <div className={styles.sideBar}>
           <div className={styles.profileSection}>

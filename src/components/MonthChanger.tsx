@@ -1,6 +1,6 @@
 import styles from "../styles/MonthChanger.module.scss";
 import { MouseEvent } from "react";
-import { getMonthText } from "../static.ts";
+import { getMonthText } from "../static/functions.ts";
 
 interface MonthChangerProps {
   date: Date;

@@ -4,8 +4,8 @@ import {
   getDateDifferenceInDays,
   getFirstDayOfMonth,
   getLastDayOfMonth,
-} from "../static.ts";
-import { AbsentData } from "../types.ts";
+} from "../static/functions.ts";
+import { AbsentData } from "../static/types.ts";
 
 interface AbsentBlockProps {
   absent: AbsentData;

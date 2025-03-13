@@ -74,3 +74,13 @@ export interface ErrorData {
   code: number;
   message: string;
 }
+
+export type LoginFormValues = {
+  email: string;
+  password: string;
+};
+
+export type MonthData = {
+  year: number;
+  month: number;
+};

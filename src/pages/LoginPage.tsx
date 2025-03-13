@@ -1,11 +1,31 @@
-import Navbar from "../components/Navbar.tsx";
 import styles from "../styles/Login.module.scss";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useMutation } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { login } from "../static/fetches.ts";
+import { LoginFormValues } from "../static/types.ts";
 
 export default function LoginPage() {
+  const navigate = useNavigate();
+  const { register, handleSubmit } = useForm<LoginFormValues>();
+
+  const loginMutation = useMutation({
+    mutationFn: login,
+    onSuccess: (data) => {
+      localStorage.setItem("token", data.token);
+      navigate("/");
+    },
+    onError: () => {
+      alert("Invalid login credentials!");
+    },
+  });
+
+  const onSubmit = (data: LoginFormValues) => {
+    loginMutation.mutate(data);
+  };
+
   return (
     <>
-      <Navbar />
       <div className={styles.LoginForm}>
         <div className={styles.leftSide}>
           <div className={styles.textAndButton}>
@@ -20,18 +40,28 @@ export default function LoginPage() {
           </div>
         </div>
 
-        <div className={styles.rightSide}>
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.rightSide}>
           <div className={styles.blockForm}>
             <p className={styles.formTitle}>Вход</p>
             <p className={styles.formSubTitle}>Email</p>
-            <input type="email" name="email" placeholder="Email" />
+            <input
+              {...register("email")}
+              type="email"
+              name="email"
+              placeholder="Email"
+            />
             <br />
             <p className={styles.formSubTitle}>Пароль</p>
-            <input type="password" name="password" placeholder="Password" />
+            <input
+              {...register("password")}
+              type="password"
+              name="password"
+              placeholder="Password"
+            />
             <br />
             <button className={styles.rightSideButton}>Войти</button>
           </div>
-        </div>
+        </form>
       </div>
     </>
   );

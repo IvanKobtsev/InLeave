@@ -9,8 +9,8 @@ import {
   useState,
   WheelEvent,
 } from "react";
-import { getFirstDayOfMonth, getLastDayOfMonth } from "../static.ts";
-import { MouseData, StudentAbsents, Vector } from "../types.ts";
+import { getFirstDayOfMonth, getLastDayOfMonth } from "../static/functions.ts";
+import { MouseData, StudentAbsents, Vector } from "../static/types.ts";
 import DayHeader from "./DayHeader.tsx";
 import FilterChanger from "./FilterChanger.tsx";
 import ExportButton from "./ExportButton.tsx";

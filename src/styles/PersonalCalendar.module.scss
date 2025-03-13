@@ -31,6 +31,28 @@
       height: calc(100% - 60px);
       padding: 15px;
       box-sizing: border-box;
+
+      .addAbsent {
+        position: absolute;
+        top: 15px;
+        left: 50%;
+        opacity: 0;
+        translate: -50% 0;
+        width: 80%;
+        height: 120px;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 15px;
+        background-image: url("../assets/svg/add-absent.svg");
+        background-position: center center;
+        background-repeat: no-repeat;
+        background-size: 100px;
+        transition: 0.25s all;
+        cursor: pointer;
+
+        &:hover {
+          opacity: 1;
+        }
+      }
     }
 
     .absentBlock {

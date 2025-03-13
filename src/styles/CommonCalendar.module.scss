@@ -1,5 +1,6 @@
 .CommonCalendar {
-  padding-bottom: 60px;
+  //padding-bottom: 60px;
+  height: calc(100% - 60px) !important;
 
   .dayBody {
     position: relative;

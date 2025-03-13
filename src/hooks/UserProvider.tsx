@@ -1,5 +1,5 @@
 import { createContext, ReactNode, useContext, useState } from "react";
-import { ERole, User } from "../types.ts";
+import { ERole, User } from "../static/types.ts";
 
 interface UserContextType {
   user: User | null;
@@ -13,7 +13,7 @@ export const UserProvider = ({ children }: { children: ReactNode }) => {
     id: "u1",
     name: "Иванов Иван Иванович",
     email: "iivanov@mail.ru",
-    roles: [ERole.Student, ERole.Admin],
+    roles: [ERole.Student, ERole.Teacher],
     budgetaryEducation: {
       id: "e1",
       faculty: `НОЦ "ВИТШ"`,

@@ -1,6 +1,5 @@
 import styles from "../styles/ErrorPages.module.scss";
-import { EError, ErrorData } from "../types.ts";
-import Navbar from "../components/Navbar.tsx";
+import { EError, ErrorData } from "../static/types.ts";
 
 interface ErrorPageProps {
   code: EError;
@@ -33,7 +32,6 @@ export default function ErrorPage({ code }: ErrorPageProps) {
 
   return (
     <>
-      <Navbar />
       <div className={`${styles.ErrorPage}`}>
         <div className={`${styles.errorContainer}`}>
           <div className={`${styles.errorCode}`}>{error.code}</div>

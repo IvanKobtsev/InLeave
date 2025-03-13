@@ -1,11 +1,9 @@
-import Navbar from "../components/Navbar.tsx";
 import styles from "../styles/Registration.module.scss";
 import { Link } from "react-router-dom";
 
 export default function RegistrationPage() {
   return (
     <>
-      <Navbar />
       <div className={styles.RegistrationForm}>
         <div className={styles.leftSide}>
           <div className={styles.textAndButton}>

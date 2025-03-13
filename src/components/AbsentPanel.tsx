@@ -5,7 +5,7 @@ import {
   ERole,
   FileData,
   StudentAbsents,
-} from "../types.ts";
+} from "../static/types.ts";
 import {
   downloadFile,
   getAbsentStatusText,
@@ -13,7 +13,7 @@ import {
   getFileCountText,
   getFileExtension,
   getFullDateText,
-} from "../static.ts";
+} from "../static/functions.ts";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChangeEvent, useState } from "react";
 import FileBlock from "./FileBlock.tsx";

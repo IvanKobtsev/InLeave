@@ -1,5 +1,5 @@
 import styles from "../styles/PersonalCalendar.module.scss";
-import { addLeadingZero, getDayOfWeekText } from "../static.ts";
+import { addLeadingZero, getDayOfWeekText } from "../static/functions.ts";
 
 interface DayHeaderProps {
   index: number;

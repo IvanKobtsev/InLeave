@@ -1,19 +1,28 @@
 import styles from "../styles/PersonalCalendar.module.scss";
-import { getFirstDayOfMonth, getLastDayOfMonth } from "../static.ts";
+import { getLastDayOfMonth } from "../static/functions.ts";
 import { useRef, useState, MouseEvent, WheelEvent } from "react";
-import { AbsentData, ERole, MouseData, StudentAbsents } from "../types.ts";
+import {
+  AbsentData,
+  ERole,
+  MouseData,
+  StudentAbsents,
+} from "../static/types.ts";
 import MonthChanger from "./MonthChanger.tsx";
-import DayHeader from "./DayHeader.tsx";
 import personalCalendarStyles from "../styles/PersonalCalendar.module.scss";
-import AbsentBlock from "./AbsentBlock.tsx";
 import AbsentPanel from "./AbsentPanel.tsx";
+import CalendarDay from "./CalendarDay.tsx";
 
 interface PersonalCalendarProps {
   student: StudentAbsents;
+  currentDate: Date;
+  currentDateSetter: (value: ((prevState: Date) => Date) | Date) => void;
 }
 
-export default function PersonalCalendar({ student }: PersonalCalendarProps) {
-  const [currentDate, setCurrentDate] = useState(new Date());
+export default function PersonalCalendar({
+  student,
+  currentDate,
+  currentDateSetter,
+}: PersonalCalendarProps) {
   const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   const mouseProps = useRef<MouseData>({
@@ -92,6 +101,8 @@ export default function PersonalCalendar({ student }: PersonalCalendarProps) {
     }
   };
 
+  const addAbsent = () => {};
+
   const closePanel = () => {
     if (
       hasUnsavedChanges &&
@@ -128,67 +139,22 @@ export default function PersonalCalendar({ student }: PersonalCalendarProps) {
       >
         {Array.from({ length: getLastDayOfMonth(currentDate).getDate() }).map(
           (_, index) => {
-            const currentDay = index + 1,
-              currentMonth = currentDate.getMonth();
-
-            let absentBlock = null;
-
-            if (
-              index === 0 &&
-              student.absents[0].from < getFirstDayOfMonth(currentDate)
-            ) {
-              absentBlock = (
-                <AbsentBlock
-                  absent={student.absents[0]}
-                  currentDate={currentDate}
-                  personal={true}
-                  selectedId={selectedAbsent?.id}
-                  clickHandler={absentBlockClickHandler}
-                />
-              );
-            } else {
-              for (const absent of student.absents) {
-                if (
-                  absent.from.getDate() === currentDay &&
-                  absent.from.getMonth() === currentMonth
-                ) {
-                  absentBlock = (
-                    <AbsentBlock
-                      absent={absent}
-                      currentDate={currentDate}
-                      personal={true}
-                      selectedId={selectedAbsent?.id}
-                      clickHandler={absentBlockClickHandler}
-                    />
-                  );
-                  break;
-                }
-              }
-            }
-            const weekDay = new Date(
-              currentDate.getFullYear(),
-              currentDate.getMonth(),
-              index + 1,
-            ).getDay();
-
             return (
-              <div
+              <CalendarDay
                 key={index}
-                className={`${styles.day} ${styles.personalDay}`}
-              >
-                <DayHeader index={index} currentDate={currentDate} />
-                <div
-                  className={`${styles.dayBody} ${weekDay === 0 ? styles.weekend : ""}`}
-                >
-                  {absentBlock}
-                </div>
-              </div>
+                index={index}
+                currentDate={currentDate}
+                student={student}
+                selectedAbsent={selectedAbsent}
+                absentBlockClickHandler={absentBlockClickHandler}
+                addAbsent={addAbsent}
+              />
             );
           },
         )}
       </div>
       <div className={personalCalendarStyles.actionButtonsWrapper}>
-        <MonthChanger date={currentDate} dateSetter={setCurrentDate} />
+        <MonthChanger date={currentDate} dateSetter={currentDateSetter} />
       </div>
     </div>
   );

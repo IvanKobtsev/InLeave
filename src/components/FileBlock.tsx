@@ -1,5 +1,5 @@
 import styles from "../styles/AbsentPanel.module.scss";
-import { FileData } from "../types.ts";
+import { FileData } from "../static/types.ts";
 
 interface FileBlockProps {
   fileData: FileData;

@@ -1,8 +1,28 @@
-import Navbar from "../components/Navbar.tsx";
 import CommonCalendar from "../components/CommonCalendar.tsx";
-import { EAbsentStatus, StudentAbsents } from "../types.ts";
+import {
+  EAbsentStatus,
+  EError,
+  ERole,
+  StudentAbsents,
+} from "../static/types.ts";
+import ErrorPage from "./ErrorPage.tsx";
+import { useUser } from "../hooks/UserProvider.tsx";
 
 export default function StudentsCalendar() {
+  const { user } = useUser();
+
+  if (!user) {
+    return <ErrorPage code={EError.Unauthorized} />;
+  }
+
+  if (
+    !user.roles.includes(ERole.Teacher) &&
+    !user.roles.includes(ERole.Dean) &&
+    !user.roles.includes(ERole.Admin)
+  ) {
+    return <ErrorPage code={EError.Forbidden} />;
+  }
+
   const studentsAbsents: StudentAbsents[] = [
     {
       id: "1",
@@ -602,7 +622,6 @@ export default function StudentsCalendar() {
 
   return (
     <>
-      <Navbar />
       <CommonCalendar absents={studentsAbsents} />
     </>
   );
