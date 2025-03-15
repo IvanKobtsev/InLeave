@@ -39,11 +39,11 @@ export enum EAbsentStatus {
 }
 
 export enum ERole {
-  Student,
-  Teacher,
-  Dean,
-  Admin,
-  None,
+  Student = "Student",
+  Teacher = "Teacher",
+  Dean = "Department",
+  Admin = "Admin",
+  None = "None",
 }
 
 export enum EError {

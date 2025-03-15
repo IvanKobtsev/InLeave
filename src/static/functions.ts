@@ -123,3 +123,16 @@ export function downloadFile(file: File) {
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
 }
+
+export const stringToEnum = <T extends Record<string, string>>(
+  enumObj: T,
+  value: string,
+): T[keyof T] | undefined => {
+  return Object.values(enumObj).includes(value as T[keyof T])
+    ? (value as T[keyof T])
+    : undefined;
+};
+
+export const isUnauthorized = () => {
+  return !Boolean(localStorage.getItem("token"));
+};

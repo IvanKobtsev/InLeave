@@ -1,5 +1,5 @@
 import styles from "../styles/Navbar.module.scss";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useEffect, useRef, useState } from "react";
 import { ERole, NotificationData, User } from "../static/types.ts";
 import { clickOutside } from "../hooks/clickOutside.ts";
@@ -7,23 +7,37 @@ import { useUser } from "../hooks/UserProvider.tsx";
 import { useMutation } from "@tanstack/react-query";
 import { catchPhrases } from "../static/constants.ts";
 import { getProfile } from "../static/fetches.ts";
+import { stringToEnum } from "../static/functions.ts";
 
 export default function Navbar() {
   const { user, setUser } = useUser();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    userMutation.mutate();
+  }, [location.pathname]);
 
   const userMutation = useMutation({
     mutationFn: getProfile,
     onSuccess: (data: User) => {
+      for (let i = 0; i < data.roles.length; i++) {
+        data.roles[i] = stringToEnum(ERole, data.roles[i])!;
+      }
       setUser(data);
     },
     onError: (error) => {
-      notify(error.message);
+      if (error.name !== "TypeError") {
+        notify(error.name);
+      }
     },
   });
 
+  console.log("user by the NAVBAR", user);
+
   const logOut = () => {
     localStorage.removeItem("token");
+    setUser(null);
     navigate("/login");
   };
 
@@ -46,10 +60,6 @@ export default function Navbar() {
   }
 
   clickOutside(handleClickOutside);
-
-  useEffect(() => {
-    userMutation.mutate();
-  }, []);
 
   const randomPhrase = catchPhrases[Math.floor(Math.random() * 40)],
     catchPhrase = useRef(randomPhrase);
@@ -76,36 +86,30 @@ export default function Navbar() {
     );
 
     if (user.roles !== undefined) {
-      for (const currentRole of user.roles) {
-        switch (currentRole) {
-          case ERole.Teacher:
-          case ERole.Dean:
-          case ERole.Admin:
-            links = (
-              <>
-                {links}
-                <Link to={"/calendar"} id="calendar" className={styles.button}>
-                  Календарь пропусков
-                </Link>
-              </>
-            );
-            break;
-          case ERole.Student:
-            links = (
-              <>
-                {links}
-                <Link
-                  to={"/calendar/my"}
-                  id="MyCalendar"
-                  className={styles.button}
-                >
-                  Мой календарь
-                </Link>
-              </>
-            );
+      if (
+        user.roles.includes(ERole.Teacher) ||
+        user.roles.includes(ERole.Admin) ||
+        user.roles.includes(ERole.Dean)
+      ) {
+        links = (
+          <>
+            {links}
+            <Link to={"/calendar"} id="calendar" className={styles.button}>
+              Календарь пропусков
+            </Link>
+          </>
+        );
+      }
 
-            break;
-        }
+      if (user.roles.includes(ERole.Student)) {
+        links = (
+          <>
+            {links}
+            <Link to={"/calendar/my"} id="MyCalendar" className={styles.button}>
+              Мой календарь
+            </Link>
+          </>
+        );
       }
     }
   }

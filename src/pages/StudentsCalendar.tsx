@@ -7,15 +7,19 @@ import {
 } from "../static/types.ts";
 import ErrorPage from "./ErrorPage.tsx";
 import { useUser } from "../hooks/UserProvider.tsx";
+import Loading from "../components/Loading.tsx";
+import { isUnauthorized } from "../static/functions.ts";
 
 export default function StudentsCalendar() {
   const { user } = useUser();
 
-  if (!user) {
-    return <ErrorPage code={EError.Unauthorized} />;
-  }
+  console.log("user by the CALENDAR:", user);
 
-  console.log(user);
+  if (isUnauthorized()) {
+    return <ErrorPage code={EError.Unauthorized} />;
+  } else if (user === null) {
+    return <Loading />;
+  }
 
   if (
     !user.roles.includes(ERole.Teacher) &&

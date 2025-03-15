@@ -1,13 +1,19 @@
 import styles from "../styles/Login.module.scss";
 import { Link, useNavigate } from "react-router-dom";
-import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 import { login } from "../static/fetches.ts";
-import { LoginFormValues } from "../static/types.ts";
+import { EError, LoginFormValues } from "../static/types.ts";
+import ErrorPage from "./ErrorPage.tsx";
+import { useMutation } from "@tanstack/react-query";
+import { isUnauthorized } from "../static/functions.ts";
 
 export default function LoginPage() {
   const navigate = useNavigate();
   const { register, handleSubmit } = useForm<LoginFormValues>();
+
+  if (!isUnauthorized()) {
+    return <ErrorPage code={EError.BadRequest} />;
+  }
 
   const loginMutation = useMutation({
     mutationFn: login,
