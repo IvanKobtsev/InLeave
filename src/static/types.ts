@@ -54,6 +54,16 @@ export enum EError {
   InternalServerError = 500,
 }
 
+export interface LinkData {
+  link: string;
+  text: string;
+}
+
+export interface NotificationData {
+  text: string;
+  isShown: boolean;
+}
+
 export interface Education {
   id: string;
   basis: string;

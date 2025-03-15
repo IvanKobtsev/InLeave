@@ -23,4 +23,27 @@
     text-align: center;
     width: 400px;
   }
+
+  .linkButton {
+    font-size: 30px;
+    background-color: var(--default-blue);
+    color: white;
+    border-radius: 15px;
+    width: 140px;
+    height: 70px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    margin-top: 30px;
+    transition: 0.2s all;
+
+    &:hover {
+      filter: brightness(1.2);
+    }
+
+    &:active {
+      scale: 0.9;
+    }
+  }
 }

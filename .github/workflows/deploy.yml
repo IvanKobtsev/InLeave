@@ -20,9 +20,9 @@ jobs:
 
       - name: Copy build to web directory
         run: |
-          sudo rm -rf /var/www/host/InLeave
-          sudo mkdir -p /var/www/host/InLeave
-          sudo cp -r dist/* /var/www/host/InLeave/
+          sudo rm -rf /var/www/InLeave
+          sudo mkdir -p /var/www/InLeave
+          sudo cp -r dist/* /var/www/InLeave/
 
       - name: Restart Nginx
         run: sudo systemctl restart nginx

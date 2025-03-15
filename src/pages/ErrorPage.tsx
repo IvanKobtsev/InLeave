@@ -1,5 +1,6 @@
 import styles from "../styles/ErrorPages.module.scss";
-import { EError, ErrorData } from "../static/types.ts";
+import { EError, ErrorData, LinkData } from "../static/types.ts";
+import { Link } from "react-router-dom";
 
 interface ErrorPageProps {
   code: EError;
@@ -10,6 +11,20 @@ export default function ErrorPage({ code }: ErrorPageProps) {
     code: code,
     message: "Неизвестная ошибка!",
   };
+
+  let link: LinkData;
+
+  if (code !== EError.Unauthorized) {
+    link = {
+      link: "/",
+      text: "На главную",
+    };
+  } else {
+    link = {
+      link: "/login",
+      text: "Войти",
+    };
+  }
 
   switch (code) {
     case 400:
@@ -26,7 +41,7 @@ export default function ErrorPage({ code }: ErrorPageProps) {
       error.message = "Страница не найдена!";
       break;
     case 500:
-      error.message = "Ошибка сервера!";
+      error.message = "Ошибка сервера! Попробуйте позже.";
       break;
   }
 
@@ -36,6 +51,9 @@ export default function ErrorPage({ code }: ErrorPageProps) {
         <div className={`${styles.errorContainer}`}>
           <div className={`${styles.errorCode}`}>{error.code}</div>
           <div className={`${styles.errorMessage}`}>{error.message}</div>
+          <Link to={link.link} className={styles.linkButton}>
+            {link.text}
+          </Link>
         </div>
       </div>
     </>

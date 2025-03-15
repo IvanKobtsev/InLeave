@@ -15,6 +15,8 @@ export default function StudentsCalendar() {
     return <ErrorPage code={EError.Unauthorized} />;
   }
 
+  console.log(user);
+
   if (
     !user.roles.includes(ERole.Teacher) &&
     !user.roles.includes(ERole.Dean) &&
