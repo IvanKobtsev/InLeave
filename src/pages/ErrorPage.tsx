@@ -1,30 +1,30 @@
 import styles from "../styles/ErrorPages.module.scss";
 import { EError, ErrorData, LinkData } from "../static/types.ts";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useEffect } from "react";
 
 interface ErrorPageProps {
   code: EError;
 }
 
 export default function ErrorPage({ code }: ErrorPageProps) {
+  const navigate = useNavigate();
+
   const error: ErrorData = {
     code: code,
     message: "Неизвестная ошибка!",
   };
 
-  let link: LinkData;
+  let link: LinkData = {
+    link: "/",
+    text: "На главную",
+  };
 
-  if (code !== EError.Unauthorized) {
-    link = {
-      link: "/",
-      text: "На главную",
-    };
-  } else {
-    link = {
-      link: "/login",
-      text: "Войти",
-    };
-  }
+  useEffect(() => {
+    if (code === EError.Unauthorized) {
+      navigate("/login");
+    }
+  });
 
   switch (code) {
     case 400:
